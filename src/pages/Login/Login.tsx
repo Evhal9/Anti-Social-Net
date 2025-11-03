@@ -3,11 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContexts';
 import { getUsers } from '../../services/api';
 import { FIXED_PASSWORD } from '../../utils/constants';
+import Alert from '../../components/Alert/Alert';
 
 const Login: React.FC = () => {
   const [nickName, setNickName] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   
   const { login } = useUser();
@@ -15,7 +16,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError(null);
     setIsLoading(true);
 
     if (password !== FIXED_PASSWORD) {
@@ -69,7 +70,11 @@ const Login: React.FC = () => {
               required
             />
           </div>
-          {error && <div className="text-error mb-1">{error}</div>}
+          <Alert 
+            message={error} 
+            type="error" 
+            onClose={() => setError(null)} 
+          />
           <button 
             type="submit" 
             className="btn btn-primary"

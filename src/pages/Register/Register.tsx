@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContexts';
 import { createUser, getUsers } from '../../services/api';
+import Alert from '../../components/Alert/Alert';
 
 const Register: React.FC = () => {
   const [nickName, setNickName] = useState('');
   
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   
   const { login } = useUser();
@@ -14,11 +16,11 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError(null);
+    setSuccess(null);
     setIsLoading(true);
 
     try {
-      // Verificar si el usuario ya existe
       const users = await getUsers();
       const existingUser = users.find(u => u.nickName === nickName);
       
@@ -28,17 +30,20 @@ const Register: React.FC = () => {
         return;
       }
 
-      // Crear nuevo usuario
       const newUser = await createUser({
         nickName,
       });
 
-      login(newUser);
-      navigate('/');
+      setSuccess('¡Usuario creado! Redirigiendo al inicio...');
+
+      setTimeout(() => {
+        login(newUser);
+        navigate('/');
+      }, 2000);
+
     } catch (err) {
       setError('Error al crear el usuario');
-    } finally {
-      setIsLoading(false);
+      setIsLoading(false); 
     }
   };
 
@@ -47,6 +52,10 @@ const Register: React.FC = () => {
       <div className="form-container">
         <h2 className="text-center">Registrarse</h2>
         <form onSubmit={handleSubmit}>
+
+          <Alert message={error} type="error" onClose={() => setError(null)} />
+          <Alert message={success} type="success" />
+
           <div className="form-group">
             <label htmlFor="nickName">Nombre de usuario *</label>
             <input
@@ -58,6 +67,7 @@ const Register: React.FC = () => {
               required
             />
           </div>
+
           <div className="form-group">
             <label htmlFor=""> Ingrese su mail</label>
             <input
@@ -66,11 +76,11 @@ const Register: React.FC = () => {
               placeholder="ejemplo123@gmail.com"
             />
           </div>
-          {error && <div className="text-error mb-1">{error}</div>}
+
           <button 
             type="submit" 
             className="btn btn-primary"
-            disabled={isLoading}
+            disabled={isLoading || !!success}
           >
             {isLoading ? 'Creando...' : 'Registrarse'}
           </button>

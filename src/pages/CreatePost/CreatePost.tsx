@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContexts';
 import { createPost, getTags, createPostImage } from '../../services/api';
 import { Tag } from '../../types';
+import Alert from '../../components/Alert/Alert';
 
 const CreatePost: React.FC = () => {
   const { user } = useUser();
@@ -13,7 +14,8 @@ const CreatePost: React.FC = () => {
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingTags, setIsLoadingTags] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -55,7 +57,8 @@ const CreatePost: React.FC = () => {
     if (!user) return;
 
     setIsLoading(true);
-    setError('');
+    setError(null);
+    setSuccess(null);
 
     try {
       // Crear el post
@@ -78,10 +81,14 @@ const CreatePost: React.FC = () => {
         );
       }
 
-      navigate('/profile');
+    setSuccess('¡Publicación creada con éxito! Redirigiendo...');
+
+      setTimeout(() => {
+        navigate('/profile');
+      }, 2000);
+
     } catch (err) {
       setError('Error al crear la publicación');
-    } finally {
       setIsLoading(false);
     }
   };
@@ -95,6 +102,10 @@ const CreatePost: React.FC = () => {
       <div className="form-container">
         <h2 className="text-center">Crear Nueva Publicación</h2>
         <form onSubmit={handleSubmit}>
+
+          <Alert message={error} type="error" onClose={() => setError(null)} />
+          <Alert message={success} type="success" />
+
           <div className="form-group">
             <label htmlFor="description">Descripción *</label>
             <textarea
@@ -165,11 +176,11 @@ const CreatePost: React.FC = () => {
             )}
           </div>
 
-          {error && <div className="text-error mb-1">{error}</div>}
+          
           <button 
             type="submit" 
             className="btn btn-primary"
-            disabled={isLoading || !description.trim()}
+            disabled={isLoading || !description.trim() || !!success}
           >
             {isLoading ? 'Publicando...' : 'Publicar'}
           </button>
