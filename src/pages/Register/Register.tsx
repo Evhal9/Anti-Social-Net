@@ -71,7 +71,6 @@ const Register: React.FC = () => {
           <div className="form-group">
             <label htmlFor=""> Ingrese su mail</label>
             <input
-              type="url"
               className="form-control"
               placeholder="ejemplo123@gmail.com"
             />
