@@ -6,9 +6,17 @@ La aplicación debe permitir que las personas usuarias puedan navegar publicacio
 Este trabajo incluye una simulación de login. No se requiere autenticación real ni JWT.
 
 ## Funcionalidades requeridas
-Inicio de Sesión (Login simulado) ● El sistema permite iniciar sesión con un nickName y una contraseña fija "123456".
-● Al iniciar sesión: ○ Se realiza un GET /users a la API para verificar si el usuario existe.
-○ La contraseña se valida localmente. ○ Si es válido, se guarda el usuario en un contexto global (useContext) y se mantiene en localStorage.
+Inicio de Sesión (Login simulado) 
+
+● El sistema permite iniciar sesión con un nickName y una contraseña fija "123456".
+
+● Al iniciar sesión: 
+
+● Se realiza un GET /users a la API para verificar si el usuario existe.
+
+● La contraseña se valida localmente. 
+
+● Si es válido, se guarda el usuario en un contexto global (useContext) y se mantiene en localStorage.
 Las rutas protegidas solo serán accesibles si hay un usuario logueado.
 
 ## Registro de Usuario

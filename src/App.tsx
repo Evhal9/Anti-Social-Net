@@ -13,6 +13,7 @@ import PostDetail from './pages/PostDetail/PostDetail';
 import Profile from './pages/Profile/Profile';
 import CreatePost from './pages/CreatePost/CreatePost';
 import './styles/globals.css';
+import Footer from './components/Footer/Footer';
 
 const App: React.FC = () => {
   return (
@@ -44,6 +45,7 @@ const App: React.FC = () => {
               />
             </Routes>
           </main>
+        <Footer />
         </div>
       </Router>
     </UserProvider>
