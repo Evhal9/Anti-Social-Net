@@ -3,17 +3,21 @@ import { Navigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContexts';
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+ children: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
+  if (isLoading) {
+    return <div className="container text-center">Cargando...</div>; // O simplemente 'null'
   }
 
-  return <>{children}</>;
+ if (!user) {
+  return <Navigate to="/login" replace />;
+ }
+
+ return <>{children}</>;
 };
 
 export default ProtectedRoute;
