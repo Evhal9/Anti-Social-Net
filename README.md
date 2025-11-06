@@ -1,142 +1,117 @@
-# UnaHur Anti-Social Net – Interfaz de Usuario
+# 🌐 AntiSocialNet — Red Social Universitaria
 
-## Objetivo
-Desarrollar el FrontEnd en React para la red social "UnaHur Anti-Social Net", utilizando la API proporcionada por el TP de BackEnd.
-La aplicación debe permitir que las personas usuarias puedan navegar publicaciones, agregar comentarios, registrarse, iniciar sesión y crear sus propios posteos.
-Este trabajo incluye una simulación de login. No se requiere autenticación real ni JWT.
+AntiSocialNet es una aplicación web inspirada en la comunidad universitaria de la **UNAHUR**, que permite a los usuarios registrarse, iniciar sesión, crear publicaciones, comentar y explorar contenido.  
+Fue desarrollada con un enfoque **Full Stack**, utilizando **React + TypeScript** en el frontend y **Express + MongoDB** en el backend.
 
-## Funcionalidades requeridas
-Inicio de Sesión (Login simulado) 
+---
 
-● El sistema permite iniciar sesión con un nickName y una contraseña fija "123456".
+## 🚀 Características principales
 
-● Al iniciar sesión: 
+- 🔐 Registro e inicio de sesión de usuarios.  
+- 📝 Creación, visualización y eliminación de publicaciones.  
+- 💬 Sistema de comentarios en cada publicación.  
+- 🧑‍🤝‍🧑 Contextos globales para manejo de usuarios y posteos.  
+- 🎨 Estilos personalizados y animaciones con CSS.  
+- ⚙️ Integración con API REST creada en Express.  
 
-● Se realiza un GET /users a la API para verificar si el usuario existe.
+---
 
-● La contraseña se valida localmente. 
+## 🧰 Tecnologías utilizadas
 
-● Si es válido, se guarda el usuario en un contexto global (useContext) y se mantiene en localStorage.
-Las rutas protegidas solo serán accesibles si hay un usuario logueado.
+### 🖥️ Frontend
+- **React 18 + TypeScript**
+- **Vite** (para un desarrollo rápido y eficiente)
+- **React Router DOM**
+- **Context API** para manejo global de estado
+- **CSS Modules** para estilos por componente
+- **Fetch API** para la comunicación con el backend
 
-## Registro de Usuario
-● Formulario para crear un nuevo usuario.
+### 🧱 Backend
+- **Node.js + Express**
+- **MongoDB + Mongoose**
+- **CORS y dotenv**
+- Arquitectura modular con controladores y rutas
 
-● Antes de enviar los datos, se debe verificar que los campos requeridos estén completos. ● Enviar POST /users. 
+---
 
-● El backend se encargará de validar que el nickName no exista previamente en la base de datos.
+## 🗂️ Estructura del proyecto
 
-● Si el servidor devuelve un error (por ejemplo, “No se pudo crear el usuario”), el frontend deberá mostrar el mensaje correspondiente al usuario.
+antisocialnet/
+├─ src/
+│  ├─ assets/                  # Imágenes y recursos visuales
+│  ├─ components/              # Componentes reutilizables (Header, Footer, etc.)
+│  ├─ context/                 # Contextos globales (UserContext, PostContext)
+│  ├─ pages/                   # Páginas principales (Home, Login, Profile, AboutUs, etc.)
+│  ├─ service/                 # Lógica de comunicación con la API
+│  ├─ styles/                  # Estilos globales
+│  ├─ types/                   # Tipado global de datos
+│  └─ utils/                   # Constantes y funciones auxiliares
 
-● Si el registro es exitoso, se puede redirigir al login o loguear directamente al usuario.
+---
 
-## Home (Página de Inicio)
-● Debe incluir un feed de publicaciones recientes, que muestre:
+## ⚙️ Instalación y ejecución
 
-● Descripción
+### 1️⃣ Clonar el repositorio
+git clone https://github.com/tuusuario/antisocialnet.git
+cd antisocialnet
 
-● Imágenes (si las hay)
+### 2️⃣ Instalar dependencias
+npm install
 
-● Etiquetas
+### 3️⃣ Ejecutar el frontend
+npm run dev
+La aplicación se ejecutará en http://localhost:5173
 
-● Cantidad de comentarios visibles ○ Botón “Ver más” → lleva a /post/:id
+### 4️⃣ Ejecutar el backend (si lo tenés descargado)
+backend https://github.com/EP-UnaHur-2025C2/anti-social-documental-grupo6
+cd anti-social-documental-grupo6
+npm install
+npm run dev
+El servidor Express se ejecutará en http://localhost:3000
 
-#### Además del feed, el contenido de la página es libre. Se pueden incluir:
+---
 
-● Banner de bienvenida
+## 📸 Capturas del proyecto
 
-● Sección “Sobre nosotros”
+| Inicio | Crear Post | Perfil |
+|:------:|:-----------:|:------:|
+| ![Home](./src/assets/unahur1.jpg) | ![Post](./src/assets/unahur2.jpg) | ![Profile](./src/assets/unahur3.jpg) |
 
-● Slogans, frases destacadas, datos curiosos
+---
 
-## Detalle de Publicación 
-● Vista accesible desde /post/:id
+## 🧩 Arquitectura general
 
-#### Muestra:
+El frontend y el backend están separados, pero se comunican mediante **peticiones HTTP** a la API REST.  
+- Los **posts** y **comentarios** se almacenan en **MongoDB**.  
+- Las peticiones desde React se realizan mediante funciones centralizadas en `src/service/api.tsx`.  
+- Se utilizan **contextos de React** para manejar el estado global del usuario y los posteos.
 
-● Descripción completa
+---
 
-● Imágenes
+## 🔗 Endpoints principales del backend
 
-● Etiquetas
+| Método | Endpoint | Descripción |
+|:--------|:----------|:-------------|
+| POST | /users/register | Crea un nuevo usuario |
+| POST | /users/login | Inicia sesión de usuario |
+| GET | /users/:id | Obtiene un usuario por ID |
+| GET | /posts | Lista todas las publicaciones |
+| POST | /posts | Crea una nueva publicación |
+| GET | /posts/:id | Obtiene un post específico |
+| DELETE | /posts/:id | Elimina una publicación |
+| POST | /posts/:id/add-comment | Agrega un comentario a un post |
 
-● Lista de comentarios visibles (filtrados por la API)
+---
 
-#### Formulario para agregar un comentario nuevo:
+## 🧑‍💻 Autores
 
-● Campo obligatorio 
+Proyecto desarrollado por estudiantes de **UNAHUR**  
+Santiago Lucas Diaz Noia
+Nair Amira Paz
+Melany Salerno Flores
 
-● Envío mediante POST /comments
+---
 
-● Componente controlado (useState)
+## 📜 Licencia
 
-## Perfil de Usuario
-● Vista protegida. Solo visible si el usuario está logueado.
-
-#### Muestra:
-
-● El nickName del usuario actual
-
- ● Lista de publicaciones realizadas por ese usuario (consultadas a la API con su userId)
-
-### Por cada post, debe mostrarse:
-
-● Descripción
-
-● Cantidad de comentarios visibles
-
-● Botón “Ver más” → que lleva a la vista de detalle 
-
-● También debe haber un botón para cerrar sesión (logout)
-
-## Crear Nueva Publicación
-
-● Vista protegida. 
-Solo accesible si el usuario ha iniciado sesión correctamente.
-
-### Formulario con los siguientes campos:
-
-● Descripción (obligatoria)
-
-● URLs de imágenes (opcional): uno o más campos para ingresar URLs de imágenes asociadas
-
-● Selección de etiquetas: lista obtenida desde la API
-
-### Funcionamiento:
-
-#### Al enviar el formulario: 
-
-● Se hace un POST /posts con description, userId y tags
-
-#### Si se ingresaron URLs de imágenes:
-
-● Por cada una, se hace un POST /postimages con url y postId
-
-● Al finalizar, redirigir al perfil o mostrar confirmación
-
-
-## Requisitos Técnicos
-
-(falta agregar el cuadro)
-
-
-
-## Extras opcionales (Bonus)
-
-● Filtro por etiquetas en la Home
-
-● Publicaciones destacadas o aleatorias
-
-● Scroll infinito o paginación
-
-● Animaciones suaves y transiciones
-
-● Alertas visuales (éxito o error)
-
-● Password dinámica y login (solo para quienes cursaron Estrategia de Persistencia):
-
-● Permitir que cada usuario registre su propia contraseña.
-
-● El backend debe validar las credenciales y devolver el resultado al frontend.
-
-● El frontend debe mostrar los mensajes de error o éxito según la respuesta del servidor.
+Este proyecto es de uso educativo y libre para fines académicos.
