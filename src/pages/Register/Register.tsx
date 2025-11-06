@@ -41,6 +41,7 @@ const Register: React.FC = () => {
         navigate('/');
       }, 2000);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError('Error al crear el usuario');
       setIsLoading(false); 
@@ -71,6 +72,7 @@ const Register: React.FC = () => {
           <div className="form-group">
             <label htmlFor=""> Ingrese su mail</label>
             <input
+              type="email"
               className="form-control"
               placeholder="ejemplo123@gmail.com"
             />
