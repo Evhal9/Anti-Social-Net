@@ -5,44 +5,47 @@ import { PostImage } from '../../types';
 import { usePosts } from '../../contexts/PostContext';
 
 const Home: React.FC = () => {
+  
   const { posts, setPosts } = usePosts();  // ✅ Usamos contexto
   const [postImages, setPostImages] = useState<{ [key: string]: PostImage[] }>({});
   const [commentsCount, setCommentsCount] = useState<{ [key: string]: number }>({});
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Solo traer posts si aún no hay posts en el contexto
-        if (posts.length === 0) {
-          const postsData = await (await fetch('/api/posts')).json(); // O usa tu getPosts()
-          setPosts(postsData);
-        }
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      let postsData = posts;
 
-        const images: { [key: string]: PostImage[] } = {};
-        const comments: { [key: string]: number } = {};
-
-        for (const post of posts) {
-          const [imagesData, commentsData] = await Promise.all([
-            getPostImagesByPostId(post.id),
-            getCommentsByPostId(post.id),
-          ]);
-
-          images[post.id] = imagesData;
-          comments[post.id] = commentsData.length;
-        }
-
-        setPostImages(images);
-        setCommentsCount(comments);
-      } catch (error) {
-        console.error('Error fetching posts data:', error);
-      } finally {
-        setIsLoading(false);
+      if (posts.length === 0) {
+        postsData = await (await fetch('/api/posts')).json();
+        setPosts(postsData);
       }
-    };
 
-    fetchData();
-  }, [posts, setPosts]);
+      const images: { [key: string]: PostImage[] } = {};
+      const comments: { [key: string]: number } = {};
+
+      for (const post of postsData) {
+        const [imagesData, commentsData] = await Promise.all([
+          getPostImagesByPostId(post.id),
+          getCommentsByPostId(post.id),
+        ]);
+
+        images[post.id] = imagesData;
+        comments[post.id] = commentsData.length;
+      }
+
+      setPostImages(images);
+      setCommentsCount(comments);
+    } catch (error) {
+      console.error('Error fetching posts data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchData();
+}, [posts, setPosts]);
+
 
   if (isLoading) {
     return <div className="container text-center">Cargando...</div>;
@@ -86,7 +89,7 @@ const Home: React.FC = () => {
             posts.map(post => (
               <div key={post.id} className="card post-card">
                 <div className="post-header">
-                  <h3>{post.user?.nickName || 'Usuario'}</h3>
+                  <h3>{post.userId || 'Usuario'}</h3>
                   <small>{new Date(post.createdAt).toLocaleDateString()}</small>
                 </div>
 
@@ -98,7 +101,7 @@ const Home: React.FC = () => {
                       <img
                         key={image.id}
                         src={image.url}
-                        alt={`Imagen de ${post.user?.nickName}`}
+                        alt={`Imagen de ${post.userId}`}
                         className="post-image"
                       />
                     ))}
