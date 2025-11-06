@@ -7,6 +7,7 @@ import { UserProvider } from './contexts/UserContexts';
 import Header from './components/Header/Header';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Home from './pages/Home/Home';
+import AboutUs from './pages/AboutUS/AboutUs';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import PostDetail from './pages/PostDetail/PostDetail';
@@ -26,6 +27,7 @@ const App: React.FC = () => {
             <main>
               <Routes>
                 <Route path="/" element={<Home />} />
+                 <Route path="/AboutUs" element={<AboutUs />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/post/:id" element={<PostDetail />} />

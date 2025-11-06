@@ -35,6 +35,7 @@ const Header: React.FC = () => {
                             </>
                         ) : (
                             <>
+                                <li><Link to="/AboutUs">Nosotros</Link></li>
                                 <li><Link to="/login">Iniciar Sesión</Link></li>
                                 <li><Link to="/register" className="btn btn-primary">Registrarse</Link></li>
                             </>
