@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getPosts, getPostImagesByPostId, getCommentsByPostId } from '../../services/api';
-import { Post, PostImage } from '../../types';
+import { getPostImagesByPostId, getCommentsByPostId } from '../../services/api';
+import { PostImage } from '../../types';
+import { usePosts } from '../../contexts/PostContext';
 
 const Home: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [postImages, setPostImages] = useState<{ [key: number]: PostImage[] }>({});
-  const [commentsCount, setCommentsCount] = useState<{ [key: number]: number }>({});
+  const { posts, setPosts } = usePosts();  // ✅ Usamos contexto
+  const [postImages, setPostImages] = useState<{ [key: string]: PostImage[] }>({});
+  const [commentsCount, setCommentsCount] = useState<{ [key: string]: number }>({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const postsData = await getPosts();
-        setPosts(postsData);
+        // Solo traer posts si aún no hay posts en el contexto
+        if (posts.length === 0) {
+          const postsData = await (await fetch('/api/posts')).json(); // O usa tu getPosts()
+          setPosts(postsData);
+        }
 
-        // Cargar imágenes y comentarios para cada post
-        const images: { [key: number]: PostImage[] } = {};
-        const comments: { [key: number]: number } = {};
+        const images: { [key: string]: PostImage[] } = {};
+        const comments: { [key: string]: number } = {};
 
-        for (const post of postsData) {
+        for (const post of posts) {
           const [imagesData, commentsData] = await Promise.all([
             getPostImagesByPostId(post.id),
-            getCommentsByPostId(post.id)
+            getCommentsByPostId(post.id),
           ]);
 
           images[post.id] = imagesData;
@@ -32,14 +35,14 @@ const Home: React.FC = () => {
         setPostImages(images);
         setCommentsCount(comments);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching posts data:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [posts, setPosts]);
 
   if (isLoading) {
     return <div className="container text-center">Cargando...</div>;
@@ -86,8 +89,9 @@ const Home: React.FC = () => {
                   <h3>{post.user?.nickName || 'Usuario'}</h3>
                   <small>{new Date(post.createdAt).toLocaleDateString()}</small>
                 </div>
+
                 <p>{post.description}</p>
-                
+
                 {postImages[post.id] && postImages[post.id].length > 0 && (
                   <div className="post-images">
                     {postImages[post.id].map(image => (
@@ -100,7 +104,7 @@ const Home: React.FC = () => {
                     ))}
                   </div>
                 )}
-                
+
                 {post.tags && post.tags.length > 0 && (
                   <div className="tags">
                     {post.tags.map(tag => (
@@ -108,7 +112,7 @@ const Home: React.FC = () => {
                     ))}
                   </div>
                 )}
-                
+
                 <div className="post-footer">
                   <span>{commentsCount[post.id] || 0} comentarios</span>
                   <Link to={`/post/${post.id}`} className="btn btn-primary">

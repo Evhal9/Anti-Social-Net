@@ -20,9 +20,9 @@ const PostDetail: React.FC = () => {
 
       try {
         const [postData, commentsData, imagesData] = await Promise.all([
-          getPostById(parseInt(id)),
-          getCommentsByPostId(parseInt(id)),
-          getPostImagesByPostId(parseInt(id))
+          getPostById(id),
+          getCommentsByPostId(id),
+          getPostImagesByPostId(id)
         ]);
 
         setPost(postData);
@@ -47,7 +47,7 @@ const PostDetail: React.FC = () => {
       const comment = await createComment({
         content: newComment,
         postId: post.id,
-        userId: user.id
+        userId: user.nickName
       });
 
       setComments(prev => [...prev, comment]);

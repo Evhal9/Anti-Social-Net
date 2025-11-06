@@ -7,8 +7,8 @@ import { Post, PostImage } from '../../types';
 const Profile: React.FC = () => {
   const { user } = useUser();
   const [userPosts, setUserPosts] = useState<Post[]>([]);
-  const [commentsCount, setCommentsCount] = useState<{ [key: number]: number }>({});
-  const [postImages, setPostImages] = useState<{ [key: number]: PostImage[] }>({});
+  const [commentsCount, setCommentsCount] = useState<{ [key: string]: number }>({});
+  const [postImages, setPostImages] = useState<{ [key: string]: PostImage[] }>({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -16,11 +16,12 @@ const Profile: React.FC = () => {
       if (!user) return;
 
       try {
-        const posts = await getPosts(user.id);
-        setUserPosts(posts);
+        const posts = await getPosts();
+        const userPosts = posts.filter(post => post.userId === user.nickName);
+        setUserPosts(userPosts);
 
-        const comments: { [key: number]: number } = {};
-        const images: { [key: number]: PostImage[] } = {};
+        const comments: { [key: string]: number } = {};
+        const images: { [key: string]: PostImage[] } = {};
 
         for (const post of posts) {
           const [commentsData, imagesData] = await Promise.all([

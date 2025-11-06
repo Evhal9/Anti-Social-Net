@@ -1,35 +1,34 @@
 export interface User {
-    id: number;
-    nickName: string;
-    avatar?: string;
-    createdAt: string;
-  }
-  
-  export interface Post {
-    id: number;
-    description: string;
-    userId: number;
-    createdAt: string;
-    tags: Tag[];
-    user?: User;
-  }
-  
-  export interface Tag {
-    id: number;
-    name: string;
-  }
-  
-  export interface Comment {
-    id: number;
-    content: string;
-    postId: number;
-    userId: number;
-    createdAt: string;
-    user?: User;
-  }
-  
-  export interface PostImage {
-    id: number;
-    url: string;
-    postId: number;
-  }
+  nickName: string;
+  avatar?: string;
+  createdAt: string;
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+}
+
+export interface Post {
+  id: string;             
+  description: string;
+  userId: string;         
+  createdAt: string;
+  tags: Tag[];
+  user?: User;
+}
+
+export interface Comment {
+  id: string;             
+  content: string;
+  postId: string;         
+  userId: string;         
+  createdAt: string;
+  user?: User;
+}
+
+export interface PostImage {
+  id: string;             
+  url: string;
+  postId: string;         
+}
