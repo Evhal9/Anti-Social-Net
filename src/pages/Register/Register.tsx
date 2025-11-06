@@ -14,7 +14,6 @@ const Register: React.FC = () => {
   const { login } = useUser();
   const navigate = useNavigate();
 
-// src/pages/Register/Register.tsx
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +33,7 @@ const Register: React.FC = () => {
       
       const newUser = await createUser({
         nickName,
-        password: "123456" // <-- AÑADE ESTO
+        password: "123456" 
       });
 
       setSuccess('¡Usuario creado! Redirigiendo al inicio...');
@@ -44,6 +43,7 @@ const Register: React.FC = () => {
         navigate('/');
       }, 2000);
     
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError('Error al crear el usuario. Intente más tarde.');
       setIsLoading(false); 
