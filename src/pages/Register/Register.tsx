@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContexts';
-import { createUser, getUsers } from '../../services/api';
 import Alert from '../../components/Alert/Alert';
+import { createUser, getUsers } from '../../services/api';
 
 const Register: React.FC = () => {
   const [nickName, setNickName] = useState('');
@@ -13,6 +13,8 @@ const Register: React.FC = () => {
   
   const { login } = useUser();
   const navigate = useNavigate();
+
+// src/pages/Register/Register.tsx
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,11 +29,12 @@ const Register: React.FC = () => {
       if (existingUser) {
         setError('El nombre de usuario ya está en uso');
         setIsLoading(false);
-        return;
+        return; 
       }
-
+      
       const newUser = await createUser({
         nickName,
+        password: "123456" // <-- AÑADE ESTO
       });
 
       setSuccess('¡Usuario creado! Redirigiendo al inicio...');
@@ -40,10 +43,9 @@ const Register: React.FC = () => {
         login(newUser);
         navigate('/');
       }, 2000);
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    
     } catch (err) {
-      setError('Error al crear el usuario');
+      setError('Error al crear el usuario. Intente más tarde.');
       setIsLoading(false); 
     }
   };
