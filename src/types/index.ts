@@ -20,12 +20,11 @@ export interface Post {
 }
 
 export interface Comment {
-  id: string;             
-  content: string;
-  postId: string;         
-  userId: string;         
+    id: string;
+  text: string;       // 👈 en vez de "content"
+  postId: string;
+  nickName: string;   // 👈 en vez de "userId"
   createdAt: string;
-  user?: User;
 }
 
 export interface PostImage {

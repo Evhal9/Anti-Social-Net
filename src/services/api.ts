@@ -77,34 +77,20 @@ export const getCommentsByPostId = async (postId: string): Promise<Comment[]> =>
   return response.json();
 };
 
-export const createComment = async (
-  comment: Omit<Comment, 'id' | 'createdAt'>
-): Promise<Comment> => {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/posts/${comment.postId}/add-comment`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: comment.content,   // contenido del comentario
-          nickName: comment.userId // nickName del autor
-        })
-      }
-    );
+export async function createComment(postId: string, commentData: { text: string; author: string }) {
+  const response = await fetch(`http://localhost:3000/posts/${postId}/add-comment`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(commentData),
+  });
 
-    if (!response.ok) {
-      const errData = await response.json();
-      throw new Error(JSON.stringify(errData));
-    }
-
-    const data = await response.json();
-    return data as Comment;
-  } catch (error) {
-    console.error('Error creando comentario:', error);
-    throw new Error('Error creando el comentario');
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error);
   }
-};
+
+  return response.json();
+}
 // POST IMAGES
 export const getPostImagesByPostId = async (postId: string): Promise<PostImage[]> => {
   const response = await fetch(`${API_BASE_URL}/posts/${postId}/images`);

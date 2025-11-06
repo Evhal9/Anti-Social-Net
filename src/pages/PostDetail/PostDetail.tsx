@@ -14,17 +14,16 @@ const PostDetail: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Cargar post + comentarios + imágenes
   useEffect(() => {
     const fetchData = async () => {
       if (!id) return;
-
       try {
         const [postData, commentsData, imagesData] = await Promise.all([
           getPostById(id),
           getCommentsByPostId(id),
           getPostImagesByPostId(id)
         ]);
-
         setPost(postData);
         setComments(commentsData);
         setImages(imagesData);
@@ -34,23 +33,24 @@ const PostDetail: React.FC = () => {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, [id]);
 
+  // Crear comentario
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !post || !newComment.trim()) return;
 
     setIsSubmitting(true);
     try {
-      const comment = await createComment({
-        content: newComment,
-        postId: post.id,
-        userId: user.nickName
+      // 👇 El backend espera { text, nickName }
+      const newCreatedComment = await createComment(post.id, {
+        text: newComment,
+        nickName: user.nickName
       });
 
-      setComments(prev => [...prev, comment]);
+      // 👇 Agregamos el nuevo comentario al final de la lista
+      setComments(prev => [...prev, newCreatedComment]);
       setNewComment('');
     } catch (error) {
       console.error('Error creating comment:', error);
@@ -70,14 +70,14 @@ const PostDetail: React.FC = () => {
   return (
     <div className="container">
       <Link to="/" className="btn btn-secondary mb-2">← Volver al inicio</Link>
-      
+
       <div className="card">
         <div className="post-header">
           <h2>{post.user?.nickName || 'Usuario'}</h2>
           <small>{new Date(post.createdAt).toLocaleDateString()}</small>
         </div>
         <p>{post.description}</p>
-        
+
         {images.length > 0 && (
           <div className="post-images">
             {images.map(image => (
@@ -90,7 +90,7 @@ const PostDetail: React.FC = () => {
             ))}
           </div>
         )}
-        
+
         {post.tags && post.tags.length > 0 && (
           <div className="tags">
             {post.tags.map(tag => (
@@ -100,10 +100,10 @@ const PostDetail: React.FC = () => {
         )}
       </div>
 
-      {/* Comments Section */}
+      {/* Sección de comentarios */}
       <div className="comments-section">
         <h3>Comentarios ({comments.length})</h3>
-        
+
         {user ? (
           <form onSubmit={handleSubmitComment} className="card">
             <div className="form-group">
@@ -135,10 +135,10 @@ const PostDetail: React.FC = () => {
         {comments.map(comment => (
           <div key={comment.id} className="comment">
             <div className="comment-header">
-              <strong>{comment.user?.nickName || 'Usuario'}</strong>
+              <strong>{comment.nickName || 'Usuario'}</strong>
               <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
             </div>
-            <p>{comment.content}</p>
+            <p>{comment.text}</p> 
           </div>
         ))}
       </div>
